@@ -28,16 +28,22 @@ ychange = 0
 #Enemy
 
 enemyimg = pygame.image.load('enemy1.png')
-enemyX = 360
-enemyY = 40
-enemyxchange = 0
-enemyychange = 0
+enemyxchange = 0.3
+enemyychange = 0.1
 
 def player(x, y):
     screen.blit(playerimg,(x, y))
 
 def enemy(x,y):
     screen.blit(enemyimg, (x,y))
+
+# Enemy Randomizer
+
+from math import pi
+
+import VQErandom
+enemyX = VQErandom.VarQRandom(0, 760, pi/4, 1, 4)
+enemyY = VQErandom.VarQRandom(0, 100, 0, 1, 4)
 
 #The main Game Loop
 
@@ -50,13 +56,13 @@ while running:
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                xchange = -0.1
+                xchange = -0.3
             if event.key == pygame.K_RIGHT:
-                xchange = 0.1
+                xchange = 0.3
             if event.key == pygame.K_UP:
-                ychange = -0.1
+                ychange = -0.3
             if event.key == pygame.K_DOWN:
-                ychange = 0.1
+                ychange = 0.3
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT:
                 xchange = 0
@@ -78,6 +84,19 @@ while running:
         playerY=0
     elif playerY>534:
         playerY=534
+
+    enemyX += enemyxchange
+
+    if enemyX<=0:
+        enemyxchange=0.2
+
+    elif enemyX>=670:
+        enemyxchange=-0.2
+    
+    if enemyX<=10:
+        enemyY +=0.2
+    elif enemyX>=650:
+        enemyY +=0.2
     
     player(playerX, playerY)
 
