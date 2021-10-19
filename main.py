@@ -25,8 +25,19 @@ playerY = 480
 xchange = 0
 ychange = 0
 
+#Enemy
+
+enemyimg = pygame.image.load('enemy1.png')
+enemyX = 360
+enemyY = 40
+enemyxchange = 0
+enemyychange = 0
+
 def player(x, y):
     screen.blit(playerimg,(x, y))
+
+def enemy(x,y):
+    screen.blit(enemyimg, (x,y))
 
 #The main Game Loop
 
@@ -58,7 +69,19 @@ while running:
     
     playerX += xchange
     playerY += ychange
+
+    if playerX<0:
+        playerX = 0
+    elif playerX>732:
+        playerX=732
+    if playerY<0:
+        playerY=0
+    elif playerY>534:
+        playerY=534
+    
     player(playerX, playerY)
+
+    enemy(enemyX, enemyY)
 
     pygame.display.update()
 
