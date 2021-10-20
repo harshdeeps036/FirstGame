@@ -4,13 +4,16 @@ import pygame
 pygame.init()
 
 #screen
-screen = pygame.display.set_mode((800,600))
+screen = pygame.display.set_mode((1000,800))
 
 running = True
 
 #Title
 
 pygame.display.set_caption('The Harsh Game')
+
+# Background
+back = pygame.image.load('background.jpg')
 
 #Icon
 
@@ -20,8 +23,8 @@ pygame.display.set_icon(icon)
 #Player
 
 playerimg = pygame.image.load('player.png')
-playerX = 380
-playerY = 480
+playerX = 480
+playerY = 720
 xchange = 0
 ychange = 0
 
@@ -42,27 +45,28 @@ def enemy(x,y):
 from math import pi
 
 import VQErandom
-enemyX = VQErandom.VarQRandom(0, 760, pi/4, 1, 4)
-enemyY = VQErandom.VarQRandom(0, 100, 0, 1, 4)
+enemyX = VQErandom.VarQRandom(0, 960, pi/4, 1, 4)
+enemyY = VQErandom.VarQRandom(0, 300, 0, 1, 4)
 
 #The main Game Loop
 
 while running:
 
     screen.fill((129,129,150))
+    screen.blit(back,(0,0))
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
             running=False
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                xchange = -0.3
+                xchange = -0.5
             if event.key == pygame.K_RIGHT:
-                xchange = 0.3
+                xchange = 0.5
             if event.key == pygame.K_UP:
-                ychange = -0.3
+                ychange = -0.5
             if event.key == pygame.K_DOWN:
-                ychange = 0.3
+                ychange = 0.5
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT:
                 xchange = 0
@@ -78,25 +82,25 @@ while running:
 
     if playerX<0:
         playerX = 0
-    elif playerX>732:
-        playerX=732
+    elif playerX>932:
+        playerX=932
     if playerY<0:
         playerY=0
-    elif playerY>534:
-        playerY=534
+    elif playerY>734:
+        playerY=734
 
     enemyX += enemyxchange
 
     if enemyX<=0:
-        enemyxchange=0.2
+        enemyxchange=0.4
 
-    elif enemyX>=670:
-        enemyxchange=-0.2
+    elif enemyX>=870:
+        enemyxchange=-0.4
     
     if enemyX<=10:
-        enemyY +=0.2
-    elif enemyX>=650:
-        enemyY +=0.2
+        enemyY +=0.4
+    elif enemyX>=950:
+        enemyY +=0.4
     
     player(playerX, playerY)
 
