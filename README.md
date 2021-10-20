@@ -5,4 +5,4 @@ I have been working on my variational quantum random number generator, that you 
 The images used are downloaded from https://www.flaticon.com, and https://www.freepik.com/  
 
 ## How to play:  
-Download the repository and run main.py in your terminal. Enjoy!
+Download the repository and run main.py in your terminal. You have 30 seconds, destroy as many ships as you can. If ships get closer to the other side or you collide with them, Game Over!
