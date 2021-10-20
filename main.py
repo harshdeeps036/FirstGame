@@ -5,31 +5,24 @@ pygame.init()
 
 #screen
 screen = pygame.display.set_mode((1000,800))
-
 running = True
 
 #Title
-
 pygame.display.set_caption('A Bad Space Game')
 
 # Background
 back = pygame.image.load('background.jpg')
 
 #Icon
-
 icon = pygame.image.load('ufo.png')
 pygame.display.set_icon(icon)
 
 # Enemy Randomizer
-
 from math import pi, sqrt
-
 import VQErandom
 import time
 
-
 #Player
-
 playerimg = pygame.image.load('player.png')
 playerX = 480
 playerY = 720
@@ -49,7 +42,6 @@ for i in range (3):
     enemyxchange.append(0.8)
 
 #Bullet
-
 bulleticon = pygame.image.load('bullet.png')
 bulletX = 480
 bulletY = playerY
@@ -59,7 +51,6 @@ bulletstate = 'ready'
 b=1
 
 #Score
-
 score_value = 0
 font = pygame.font.Font('freesansbold.ttf', 32)
 scorex = 10
@@ -81,7 +72,6 @@ def fire_bullet(x,y):
     screen.blit(bulleticon, (x+16,y+20))
 
 #The main Game Loop
-
 def collision(x1, y1, x2, y2):
     distance = sqrt((x2-x1)**2+(y2-y1)**2)
     if distance<30:
@@ -100,13 +90,11 @@ def game_over(x,y):
 start = time.time()
 
 while running:
-
     screen.fill((129,129,150))
     screen.blit(back,(0,0))
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
             running=False
-
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
                 xchange = -0.9
@@ -144,7 +132,6 @@ while running:
 
     for i in range (3):
         #Over
-
         if enemyY[i]>650:
             for j in range (3):
                 enemyY[j]=2000
@@ -153,7 +140,6 @@ while running:
 
         #Over
         checkene = collision(enemyX[i], enemyY[i], playerX, playerY)
-
         if checkene:
             for j in range (3):
                 enemyY[j]=2000
@@ -175,8 +161,6 @@ while running:
             enemyY[i] +=0.8
 
         enemy(i, enemyX[i], enemyY[i])
-
-
         
     player(playerX, playerY)
 
