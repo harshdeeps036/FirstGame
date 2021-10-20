@@ -25,6 +25,7 @@ pygame.display.set_icon(icon)
 from math import pi, sqrt
 
 import VQErandom
+import time
 
 
 #Player
@@ -96,6 +97,7 @@ def game_over(x,y):
     scoreshow = over_font.render("GAME OVER", True, (255,255,255))
     screen.blit(scoreshow, (x, y))
 
+start = time.time()
 
 while running:
 
@@ -199,6 +201,12 @@ while running:
 
         show_score(scorex, scorey) 
 
+    end = time.time()
+
+    if (end-start)>=30:
+        for j in range (3):
+            enemyY[j]=2000
+        game_over(400, 300)       
 
     pygame.display.update()
 
