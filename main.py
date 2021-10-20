@@ -10,7 +10,7 @@ running = True
 
 #Title
 
-pygame.display.set_caption('The Harsh Game')
+pygame.display.set_caption('A Bad Space Game')
 
 # Background
 back = pygame.image.load('background.jpg')
@@ -19,6 +19,13 @@ back = pygame.image.load('background.jpg')
 
 icon = pygame.image.load('ufo.png')
 pygame.display.set_icon(icon)
+
+# Enemy Randomizer
+
+from math import pi, sqrt
+
+import VQErandom
+
 
 #Player
 
@@ -29,10 +36,16 @@ xchange = 0
 ychange = 0
 
 #Enemy
-
-enemyimg = pygame.image.load('enemy1.png')
-enemyxchange = 0.3
-enemyychange = 0.1
+enemyimg = []
+enemyX= []
+enemyY= []
+enemyxchange = []
+enemyychange = 0.6
+for i in range (3):
+    enemyimg.append(pygame.image.load('enemy1.png'))
+    enemyX.append(100 * (VQErandom.VarQRandom(0, 9.6, 0, 1, 4)))
+    enemyY.append(100 * (VQErandom.VarQRandom(0, 3, 0, 1, 4)))
+    enemyxchange.append(0.8)
 
 #Bullet
 
@@ -44,26 +57,45 @@ bulletychange = 3
 bulletstate = 'ready'
 b=1
 
+#Score
+
+score_value = 0
+font = pygame.font.Font('freesansbold.ttf', 32)
+scorex = 10
+scorey= 10
+
+def show_score(x,y):
+    scoreshow = font.render('Score:'+str(score_value), True, (255,255,255))
+    screen.blit(scoreshow, (x, y))
+
 def player(x, y):
     screen.blit(playerimg,(x, y))
 
-def enemy(x,y):
-    screen.blit(enemyimg, (x,y))
+def enemy(k,x,y):
+    screen.blit(enemyimg[k],(x,y))
 
 def fire_bullet(x,y):
     global bulletstate
     bulletstate = 'fire'
     screen.blit(bulleticon, (x+16,y+20))
 
-# Enemy Randomizer
-
-from math import pi
-
-import VQErandom
-enemyX = VQErandom.VarQRandom(0, 960, pi/4, 1, 4)
-enemyY = VQErandom.VarQRandom(0, 300, 0, 1, 4)
-
 #The main Game Loop
+
+def collision(x1, y1, x2, y2):
+    distance = sqrt((x2-x1)**2+(y2-y1)**2)
+    if distance<30:
+        return True
+    else:
+        return False
+
+# Game over
+over_font = pygame.font.Font('freesansbold.ttf', 64)
+overx = 10
+overy= 10
+def game_over(x,y):
+    scoreshow = over_font.render("GAME OVER", True, (255,255,255))
+    screen.blit(scoreshow, (x, y))
+
 
 while running:
 
@@ -75,13 +107,13 @@ while running:
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                xchange = -0.5
+                xchange = -0.9
             if event.key == pygame.K_RIGHT:
-                xchange = 0.5
+                xchange = 0.9
             if event.key == pygame.K_UP:
-                ychange = -0.5
+                ychange = -0.9
             if event.key == pygame.K_DOWN:
-                ychange = 0.5
+                ychange = 0.9
             if event.key == pygame.K_SPACE:
                 if bulletstate=='ready':
                     bulletX = playerX
@@ -108,22 +140,44 @@ while running:
     elif playerY>734:
         playerY=734
 
-    enemyX += enemyxchange
+    for i in range (3):
+        #Over
 
-    if enemyX<=0:
-        enemyxchange=0.4
+        if enemyY[i]>650:
+            for j in range (3):
+                enemyY[j]=2000
+            game_over(400, 300)
+            break
 
-    elif enemyX>=870:
-        enemyxchange=-0.4
-    
-    if enemyX<=10:
-        enemyY +=0.4
-    elif enemyX>=950:
-        enemyY +=0.4
-    
+        #Over
+        checkene = collision(enemyX[i], enemyY[i], playerX, playerY)
+
+        if checkene:
+            for j in range (3):
+                enemyY[j]=2000
+            game_over(0, 300)
+            break        
+
+        enemyX[i] += enemyxchange[i]
+
+        if enemyX[i]<=0:
+            enemyxchange[i]=0.8
+
+        elif enemyX[i]>=870:
+            enemyxchange[i]=-0.8
+        
+        if enemyX[i]<=30:
+            enemyY[i] +=0.8
+
+        elif enemyX[i]>=800:
+            enemyY[i] +=0.8
+
+        enemy(i, enemyX[i], enemyY[i])
+
+
+        
     player(playerX, playerY)
 
-    enemy(enemyX, enemyY)
     if bulletY<=0:
         bulletY = playerY
         bulletstate='ready'
@@ -131,6 +185,20 @@ while running:
     if bulletstate is 'fire':
         fire_bullet(bulletX, bulletY)
         bulletY -= bulletychange
+
+    #Collision
+    for i in range (3):
+        checkcol = collision(enemyX[i], enemyY[i], bulletX, bulletY)
+
+        if checkcol:
+            bulletY = playerY
+            bulletstate='ready'
+            score_value = score_value +1
+            enemyX[i] = 100 * (VQErandom.VarQRandom(0, 9.6, 0, 1, 4))
+            enemyY[i] = 100 * (VQErandom.VarQRandom(0, 3, 0, 1, 4))
+
+        show_score(scorex, scorey) 
+
 
     pygame.display.update()
 
